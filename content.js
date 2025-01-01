@@ -6,7 +6,6 @@ async function aiSummarize(text) {
             throw new Error('No API key found');
         }
 
-        console.log('Attempting Gemini API summarization...');
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${result.geminiApiKey}`, {
             method: 'POST',
             headers: {
@@ -32,7 +31,6 @@ async function aiSummarize(text) {
         }
 
         const data = await response.json();
-        console.log('Successfully generated Gemini API summary');
         return {
             summary: data.candidates[0].content.parts[0].text,
             source: 'Gemini'
@@ -46,7 +44,6 @@ async function aiSummarize(text) {
                 const s = nlp(sentence);
                 return s.has('#Noun') && s.has('#Verb');
             });
-            console.log('Successfully generated compromise.js summary');
             return {
                 summary: importantSentences[0] || sentences[0] || text,
                 source: 'compromise.js'
