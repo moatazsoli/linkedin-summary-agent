@@ -7,7 +7,7 @@ async function aiSummarize(text) {
         }
 
         console.log('Attempting Gemini API summarization...');
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${result.geminiApiKey}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${result.geminiApiKey}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -21,6 +21,8 @@ async function aiSummarize(text) {
                 generationConfig: {
                     temperature: 0.3,
                     maxOutputTokens: 60,
+                    topK: 1,
+                    topP: 0.8
                 }
             })
         });
