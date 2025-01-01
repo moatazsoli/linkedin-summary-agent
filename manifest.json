@@ -3,6 +3,11 @@
   "name": "LinkedIn Post Summarizer",
   "version": "1.0",
   "description": "Adds TL;DR summaries to LinkedIn posts",
+  "icons": {
+    "16": "icon16.png",
+    "32": "icon32.png",
+    "128": "icon128.png"
+  },
   "permissions": [
     "activeTab",
     "scripting",
@@ -23,6 +28,11 @@
     }
   ],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "32": "icon32.png",
+      "128": "icon128.png"
+    }
   }
 } 
