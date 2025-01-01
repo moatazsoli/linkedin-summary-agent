@@ -9,10 +9,24 @@
     .input-group {
       margin-bottom: 16px;
     }
-    input {
+    label {
+      display: block;
+      margin-bottom: 4px;
+    }
+    input, textarea {
       width: 100%;
       padding: 8px;
       margin-top: 4px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+    .optional-label {
+      color: #666;
+      font-size: 12px;
     }
     .button-group {
       display: flex;
@@ -51,9 +65,16 @@
     <label for="apiKey">Gemini API Key:</label>
     <input type="password" id="apiKey" placeholder="Enter your API key">
   </div>
+  <div class="input-group">
+    <label for="summaryTone">
+      Summary Tone (Optional):
+      <span class="optional-label">e.g., "professional", "casual", "enthusiastic"</span>
+    </label>
+    <textarea id="summaryTone" placeholder="Customize how you want the summaries to sound. Example: 'Summarize in a professional and concise manner'"></textarea>
+  </div>
   <div class="button-group">
-    <button id="saveButton">Save API Key</button>
-    <button id="clearButton">Clear API Key</button>
+    <button id="saveButton">Save Settings</button>
+    <button id="clearButton">Clear All</button>
   </div>
   <div id="status" class="status"></div>
   <script src="popup.js"></script>

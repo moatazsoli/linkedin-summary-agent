@@ -1,11 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
     const apiKeyInput = document.getElementById('apiKey');
+    const toneInput = document.getElementById('summaryTone');
     const status = document.getElementById('status');
 
-    // Load saved API key
-    chrome.storage.local.get(['geminiApiKey'], (result) => {
+    // Load saved settings
+    chrome.storage.local.get(['geminiApiKey', 'summaryTone'], (result) => {
         if (result.geminiApiKey) {
             apiKeyInput.value = result.geminiApiKey;
+        }
+        if (result.summaryTone) {
+            toneInput.value = result.summaryTone;
         }
     });
 
@@ -16,23 +20,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 2000);
     }
 
-    // Save API key
+    // Save settings
     document.getElementById('saveButton').addEventListener('click', () => {
         const apiKey = apiKeyInput.value.trim();
+        const tone = toneInput.value.trim();
+        
         if (!apiKey) {
             showStatus('Please enter an API key');
             return;
         }
-        chrome.storage.local.set({ geminiApiKey: apiKey }, () => {
-            showStatus('API key saved!');
+
+        chrome.storage.local.set({
+            geminiApiKey: apiKey,
+            summaryTone: tone
+        }, () => {
+            showStatus('Settings saved!');
         });
     });
 
-    // Clear API key
+    // Clear all settings
     document.getElementById('clearButton').addEventListener('click', () => {
         apiKeyInput.value = '';
-        chrome.storage.local.remove('geminiApiKey', () => {
-            showStatus('API key cleared!');
+        toneInput.value = '';
+        chrome.storage.local.remove(['geminiApiKey', 'summaryTone'], () => {
+            showStatus('All settings cleared!');
         });
     });
 }); 
