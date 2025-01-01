@@ -49,12 +49,24 @@
     .input-group {
       margin-bottom: 16px;
     }
-    input {
+    label {
+      display: block;
+      margin-bottom: 4px;
+    }
+    input, textarea {
       width: 100%;
       padding: 8px;
       margin-top: 4px;
       border: 1px solid #ddd;
       border-radius: 4px;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+    .optional-label {
+      color: #666;
+      font-size: 12px;
     }
     .button-group {
       display: flex;
@@ -134,6 +146,30 @@
     input:checked + .toggle-slider:before {
         transform: translateX(20px);
     }
+    #settingsContainer {
+        transition: opacity 0.3s ease;
+    }
+    #settingsContainer.disabled {
+        opacity: 0.5;
+    }
+    #settingsContainer.disabled input,
+    #settingsContainer.disabled textarea,
+    #settingsContainer.disabled button,
+    #settingsContainer.disabled a {
+        pointer-events: none;
+        cursor: not-allowed;
+    }
+    #settingsContainer.disabled input,
+    #settingsContainer.disabled textarea {
+        background-color: #f5f5f5;
+    }
+    #settingsContainer.disabled button {
+        opacity: 0.7;
+    }
+    #settingsContainer.disabled .api-link {
+        opacity: 0.7;
+        text-decoration: none;
+    }
   </style>
 </head>
 <body>
@@ -145,30 +181,42 @@
     </div>
   </div>
 
-  <div class="info-text">
-    This extension uses Google's Gemini AI to generate concise summaries. Without an API key, it will fall back to local summarization using compromise.js and simple extraction methods.
-  </div>
-
-  <a href="https://aistudio.google.com/app/apikey" target="_blank" class="api-link">
-    Get your Gemini API key here
-  </a>
-
-  <div class="input-group">
-    <label for="apiKey">Gemini API Key:</label>
-    <input type="password" id="apiKey" placeholder="Enter your API key">
-  </div>
   <div class="toggle-group">
     <label class="toggle-label">
-        <span>Summarization</span>
+        <span>Enable Summarization</span>
         <div class="toggle-switch">
             <input type="checkbox" id="toggleSummarization" checked>
             <span class="toggle-slider"></span>
         </div>
     </label>
   </div>
-  <div class="button-group">
-    <button id="saveButton">Save API Key</button>
-    <button id="clearButton">Clear API Key</button>
+
+  <div id="settingsContainer">
+    <div class="info-text">
+      This extension uses Google's Gemini AI to generate concise summaries. Without an API key, it will fall back to local summarization using compromise.js and simple extraction methods.
+    </div>
+
+    <a href="https://aistudio.google.com/app/apikey" target="_blank" class="api-link">
+      Get your Gemini API key here
+    </a>
+
+    <div class="input-group">
+      <label for="apiKey">Gemini API Key:</label>
+      <input type="password" id="apiKey" placeholder="Enter your API key">
+    </div>
+
+    <div class="input-group">
+      <label for="summaryTone">
+        Summary Tone (Optional):
+        <span class="optional-label">e.g., "professional", "casual", "enthusiastic"</span>
+      </label>
+      <textarea id="summaryTone" placeholder="Customize how you want the summaries to sound. Example: 'Summarize in a professional and concise manner'"></textarea>
+    </div>
+
+    <div class="button-group">
+      <button id="saveButton">Save Settings</button>
+      <button id="clearButton">Clear All</button>
+    </div>
   </div>
   <div id="status" class="status"></div>
   <script src="popup.js"></script>

@@ -1,9 +1,17 @@
 async function aiSummarize(text) {
     try {
-        // Get API key from storage
-        const result = await chrome.storage.local.get(['geminiApiKey']);
+        // Get API key and tone from storage
+        const result = await chrome.storage.local.get(['geminiApiKey', 'summaryTone']);
         if (!result.geminiApiKey) {
             throw new Error('No API key found');
+        }
+
+        console.log('Attempting Gemini API summarization...');
+        
+        // Construct prompt based on tone setting
+        let prompt = 'Summarize this LinkedIn post in one concise sentence';
+        if (result.summaryTone) {
+            prompt = `${prompt} ${result.summaryTone}`;
         }
 
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${result.geminiApiKey}`, {
@@ -14,7 +22,7 @@ async function aiSummarize(text) {
             body: JSON.stringify({
                 contents: [{
                     parts: [{
-                        text: `Summarize this LinkedIn post in one concise sentence: ${text}`
+                        text: `${prompt}: ${text}`
                     }]
                 }],
                 generationConfig: {
@@ -60,7 +68,7 @@ async function aiSummarize(text) {
 }
 
 async function processPost(postElement) {
-    // Check if summarization is enabled
+    // Check if summarization is enabled (defaults to true if not set)
     const result = await chrome.storage.local.get(['summarizationEnabled']);
     if (result.summarizationEnabled === false) {
         return;
