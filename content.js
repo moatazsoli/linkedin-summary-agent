@@ -60,6 +60,12 @@ async function aiSummarize(text) {
 }
 
 async function processPost(postElement) {
+    // Check if summarization is enabled
+    const result = await chrome.storage.local.get(['summarizationEnabled']);
+    if (result.summarizationEnabled === false) {
+        return;
+    }
+
     // Double-check in case of race conditions
     if (postElement.querySelector('.tldr-summary')) {
         return;

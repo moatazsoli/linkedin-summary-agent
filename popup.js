@@ -1,12 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const apiKeyInput = document.getElementById('apiKey');
+    const toggleSwitch = document.getElementById('toggleSummarization');
     const status = document.getElementById('status');
 
-    // Load saved API key
-    chrome.storage.local.get(['geminiApiKey'], (result) => {
+    // Load saved settings
+    chrome.storage.local.get(['geminiApiKey', 'summarizationEnabled'], (result) => {
         if (result.geminiApiKey) {
             apiKeyInput.value = result.geminiApiKey;
         }
+        toggleSwitch.checked = result.summarizationEnabled !== false; // Default to true
     });
 
     function showStatus(message) {
@@ -16,23 +18,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 2000);
     }
 
-    // Save API key
+    // Save settings
     document.getElementById('saveButton').addEventListener('click', () => {
         const apiKey = apiKeyInput.value.trim();
         if (!apiKey) {
             showStatus('Please enter an API key');
             return;
         }
-        chrome.storage.local.set({ geminiApiKey: apiKey }, () => {
-            showStatus('API key saved!');
+        chrome.storage.local.set({ 
+            geminiApiKey: apiKey,
+            summarizationEnabled: toggleSwitch.checked
+        }, () => {
+            showStatus('Settings saved!');
         });
     });
 
-    // Clear API key
+    // Handle toggle changes
+    toggleSwitch.addEventListener('change', () => {
+        chrome.storage.local.set({ 
+            summarizationEnabled: toggleSwitch.checked 
+        }, () => {
+            showStatus(toggleSwitch.checked ? 'Summarization enabled' : 'Summarization disabled');
+        });
+    });
+
+    // Clear settings
     document.getElementById('clearButton').addEventListener('click', () => {
         apiKeyInput.value = '';
-        chrome.storage.local.remove('geminiApiKey', () => {
-            showStatus('API key cleared!');
+        toggleSwitch.checked = true;
+        chrome.storage.local.remove(['geminiApiKey', 'summarizationEnabled'], () => {
+            showStatus('All settings cleared!');
         });
     });
 }); 
